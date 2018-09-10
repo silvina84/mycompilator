@@ -5,7 +5,8 @@
 #include <math.h>
 #include <string.h>
 #include "y.tab.h"
-#include "ts_funciones.h"
+#include "ts.h"
+#include "tercetos.h"
 
 FILE  *yyin;
 char *yytext;
