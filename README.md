@@ -1,7 +1,6 @@
 <h1>Compilador de la cursada LyC</h1>
 <h2>Objetivos</h2>
 Cumplir con la primer entrega del TP para el <b>Lunes 17-09-2018</b><br>
-Flex y Bison de la gramática<br>
 Imprimer reglas por pantalla<br>
 Crear y dumpear a un archivo la tabla de símbolos.<br>
 
