@@ -65,7 +65,6 @@ float			{return FLOAT;}
 string			{return STRING;}
 
 if				{return IF;}
-then			{return THEN;}
 else			{return ELSE;}
 while			{return WHILE;}
 

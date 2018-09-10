@@ -2,11 +2,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <conio.h>
+#include <math.h>
+#include <string.h>
 #include "y.tab.h"
+#include "ts_funciones.h"
 
 FILE  *yyin;
 char *yytext;
 void yyerror(char *msg);
+//-----------------------Funciones para validacion de tipos
+int validarInt(char entero[]);
+int validarFloat(char flotante[]);
+int validarString(char cadena[]);
+//-----------------------Fin
+
 %}
 
 %union{
@@ -34,7 +43,6 @@ void yyerror(char *msg);
 %token IF
 %token ELSE
 %token WHILE
-%token THEN
 %token AVG
 
 %%
@@ -128,9 +136,9 @@ factor
 		;									
 
 tipo									
-	:ENTERO																		{printf("ENTERO\n");}
-	|REAL																		{printf("FLOAT\n");}
-	|CADENA																		{printf("CADENA\n");}
+	:ENTERO																		{validarInt(yytext);printf("ENTERO\n");}
+	|REAL																		{validarFloat(yytext);printf("FLOAT\n");}
+	|CADENA																		{validarString(yytext);printf("CADENA\n");}
 	;
 
 %%
@@ -153,3 +161,75 @@ void yyerror(char *msg){
     fprintf(stderr, "%s\n", msg);
     exit(1);
 }
+
+//-----------------------Funciones para validacion de tipos-----------------------//
+int validarInt(char entero[]) {
+    int casteado = atoi(entero);
+    char msg[100];
+    if(casteado < -32768 || casteado > 32767) {
+        sprintf(msg, "ERROR: Entero %d fuera de rango. Debe estar entre [-32768; 32767]\n", casteado);
+        yyerror(msg);
+    } else {
+        //guardarenTS
+        //saveSymbol(entero,"cFloat", NULL);
+        //insertarTipo("cFloat");
+
+        //printf solo para pruebas:
+        //printf("Entero ok! %d \n", casteado);
+        return 0;
+    }
+}
+
+int validarFloat(char flotante[]) {
+    double casteado = atof(flotante);
+    casteado = fabs(casteado);
+    char msg[300];
+    if(casteado < pow(-1.17549,-38) || casteado >  pow(3.40282,38)){
+    //if(casteado < 2 || casteado >  10){
+        sprintf(msg, "ERROR: Float %f fuera de rango. Debe estar entre [1.17549e-38; 3.40282e38]\n", casteado);
+        yyerror(msg);
+    } 
+    else {
+        //saveSymbol(flotante,"cFloat", NULL);
+        //insertarTipo("cFloat");
+        //guardarenTS
+        //printf solo para pruebas:
+        //printf("Float ok! %f \n", casteado);
+        return 0;
+    }
+}
+
+int validarString(char cadena[]) {
+    char msg[100];
+    int longitud = strlen(cadena);
+
+    if( strlen(cadena) > 32){ //en lugar de 30 verifica con 32 porque el string viene entre comillas
+        sprintf(msg, "ERROR: Cadena %s demasiado larga. Maximo 30 caracteres\n", cadena);
+        yyerror(msg);
+    }
+    char sincomillas[31];
+    int i;
+    for(i=0; i< longitud - 2 ; i++) {
+            sincomillas[i]=cadena[i+1];
+    }
+    sincomillas[i]='\0';
+    //guardarenTS();
+    //saveSymbol(sincomillas,"cString", NULL);
+    //insertarTipo("string");
+    //reemplazarBlancos(sincomillas);
+    //apilarPolaca(sincomillas);
+    /*
+    // Bloque para debug
+    printf("***************************\n");
+    printf("%d\n",strlen(sincomillas));
+    for ( i = 0; i < strlen(sincomillas)+1; i++) {
+        printf("%d : %c , %d \n",i,sincomillas[i],sincomillas[i]);
+    }
+    printf("***************************\n");
+    */
+
+    //guardarenTS;
+    return 0;
+}
+
+//-----------------------Fin de funciones para validacion-----------------------//
