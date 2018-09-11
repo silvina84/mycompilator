@@ -6,7 +6,7 @@ Crear y dumpear a un archivo la tabla de símbolos.<br>
 
 
 <h2>Tareas Pendientes</h2>
-
+<b>Crear las funciones necesarias para verificar en las comparaciones los tipos de datos a comparar, es decir que ambos sean int o float. Tambien que chequee que una variable int no pueda ser seteada con un string, lo mismo con un float.</b><br>
 
 <h2>Tareas Hechas</h2>
 <strike>Se incorporo las estructura de decision e iteracion</strike><br>
