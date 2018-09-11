@@ -1,3 +1,4 @@
+//Estructura de datos de la tabla de simbolos
 typedef struct symbol {
     char nombre[50];
     char tipo[10];
@@ -10,6 +11,12 @@ typedef struct symbol {
 int pos_st = 0;
 symbol nullSymbol;
 symbol symbolTable[1000];
+
+/* Funciones para que el bloque DecVar cargue la tabla de símbolos */
+char varTypeArray[2][100][50];
+int idPos = 0;
+int typePos = 0;
+/* Fin funciones para que el bloque DecVar cargue la tabla de símbolos */
 
 char *downcase(char *p){
     char *pOrig = p;
@@ -63,8 +70,6 @@ int saveSymbol(char nombre[], char tipo[], char valor[] ){
     } else {
         strcpy(newSymbol.valor, valor);
     }
-
-    //strcpy(newSymbol.alias, alias);
     newSymbol.longitud = strlen(nombre);
     symbolTable[use_pos] = newSymbol;
     newSymbol = nullSymbol;
@@ -76,3 +81,76 @@ symbol getSymbol(char nombre[]){
     if(pos >= 0) return symbolTable[pos];
     return nullSymbol;
 }
+
+/* Funciones para que finalizado el bloque de declaracion se cargue la tabla de símbolos en la estructura de datos creada */
+//Guardar ID en la estructura
+void saveId (char *id) {
+    strcpy(varTypeArray[0][idPos++],id);
+}
+//Guardar el tipo en la estructura
+void saveType (char *type){
+    strcpy(varTypeArray[1][typePos++],type);
+}
+//Guardar en el vector
+void saveIdType() {
+    printf("Guardando data en tabla de simbolos\n");
+    int i;
+    for(i=0; i < idPos; i++ ) {
+        saveSymbol(varTypeArray[0][i],varTypeArray[1][i], NULL);
+    }
+    idPos=0;
+    typePos=0;
+}
+/* Fin de funciones para que el bloque DecVar cargue la tabla de símbolos */
+
+//-----------------------Guarda la tabla de Simbolos en formato HTML-----------------------//
+void writeStyle(FILE *p){
+    fprintf(p,"<style>\ntable {\nfont-family: arial, sans-serif;\nborder-collapse: collapse;\nwidth: 100%%;\n}\ntd, th {\nborder: 1px solid #dddddd;\ntext-align: left;\npadding: 8px;\n}\ntr:nth-child(even) {\nbackground-color: #dddddd;\n}\n</style>\n");
+}
+
+void writeTupla(FILE *p ,int filas,symbol symbolTable[]){
+    int j;
+    for(j=0; j < filas; j++ ){
+        fprintf(p, "<tr>\n");
+        fprintf(p,"\t<th>%s</th>\n",symbolTable[j].nombre);
+        fprintf(p,"\t<th>%s</th>\n",symbolTable[j].tipo);
+        fprintf(p,"\t<th>%s</th>\n",symbolTable[j].valor);
+        fprintf(p,"\t<th>%s</th>\n",symbolTable[j].alias);
+        fprintf(p,"\t<th>%d</th>\n",symbolTable[j].longitud);
+        fprintf(p,"\t<th>%d</th>\n",symbolTable[j].limite);
+        fprintf(p, "</tr>\n");
+    }
+}
+
+void writeTable(FILE *p,  int filas, symbol symbolTable[], void (*tupla)(FILE *p ,int filas, symbol symbolTable[])){
+    fprintf(p,"<table>\n");
+    fprintf(p, "<tr>\n");
+    char titulos[6][20] = {"Nombre","Tipo","Valor","Alias","Longitud","Limite"};
+    int j,i;
+    for(j=0; j < 6; j++ ){
+        fprintf(p,"<th>%s</th>\n",titulos[j]);
+    }
+    fprintf(p, "</tr>");
+    tupla(p,filas,symbolTable);
+    fprintf(p,"</table>\n");
+}
+
+void writeHeader(FILE *p, char *title, void (*style)(FILE *p)){
+fprintf (p,"<!DOCTYPE html>\n<html>\n<head>\n<title>%s</title>\n",title);
+style(p);
+fprintf (p,"</head>\n<body>");
+}
+
+void writeFooter(FILE *p){
+fprintf (p,"</body>\n</html>");
+}
+
+void symbolTableToHtml(symbol symbolTable[],char * ruta)
+{
+FILE  *p = fopen(ruta, "w");
+writeHeader(p, "Tabla de simbolos",writeStyle);
+writeTable(p,pos_st  , symbolTable,writeTupla);
+writeFooter(p);
+fclose(p);
+}
+//-----------------------Guarda la tabla de Simbolos en formato HTML-----------------------//
