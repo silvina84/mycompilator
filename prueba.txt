@@ -1,14 +1,14 @@
 -/Test de comentario/-
 DEFVAR
+a5er : string -/Test de longitud de ID probar con el siguiente ID a1eroyighj654654654hj/- 
 a5er,a2er,a2er,a2er,a2er : int -/Test de lista de declaracion de variables/-
-a1er : int
 a6er : float
 a4er : string -/Test de comentario de primer nivel/-
 a5er : string
 ENDDEF
 
 -/Test de Iteracion/-
-while(r9r>9)
+while(a1eroyighjhj>9)
 {
 AVG([5,5.7,a1er+a4er,c2*(a1er*2)]) -/Test de la funcion AVG/-
 }  
@@ -19,15 +19,15 @@ if(r9r>9 && r9r>9 || r9r>9) -/Test de Condiciones Multiples/-
 a1er:=a8er:=a9er:=A6GF7:=5.6 -/Test de Asignacion Multiple/-
 }
 
-if(r9r>9 && r9r>9 || r9r>9) -/Test de Estructuras Anidadas/-
+if(r9r>9 || r9r>9) -/Test de Estructuras Anidadas/-
 {
 	if(r9r>9 && r9r>9 || r9r>9)
 	{
-		while(r9r>9 && r9r>9 || r9r>9)
+		while(r9r>9)
 		{
-			while(r9r>9 && r9r>9 || r9r>9)
+			while(r9r>9)
 			{
-				a1er:=a8er:=a9er:=A6GF7:=5.6
+				a1er:=5.6
 			}			
 		}
 	}

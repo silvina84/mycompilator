@@ -17,10 +17,10 @@ ENTERO			-?{DIGITO}+
 REAL			-?{DIGITO}*"."{DIGITO}*|0
 CADENA			["]([^"]|\\.)*["]
 
-ABRIR				"-/"
-CERRAR				"/-"
-CONTENIDO			[a-zA-Z0-9 ]*
-COMENTARIO 			{ABRIR}{CONTENIDO}{CERRAR}		
+ABRIR			"-/"
+CERRAR			"/-"
+CONTENIDO		[a-zA-Z0-9 ]*
+COMENTARIO 		{ABRIR}{CONTENIDO}{CERRAR}		
 
 %%
 {COMENTARIO} 	{;}
