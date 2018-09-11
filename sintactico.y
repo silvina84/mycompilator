@@ -9,9 +9,8 @@
 #include "tercetos.h"
 #include "validacion.h"
 
-FILE  *yyin;
+FILE  *yyin,*fArbol;
 char *yytext;
-void yyerror(char *msg);
 %}
 
 %union{
@@ -42,6 +41,10 @@ void yyerror(char *msg);
 %token AVG
 
 %%
+raiz
+    :programa                                                                  {printf("Generando Tabla de Simbolos\n");symbolTableToHtml(symbolTable,"ts.html");}
+    ;
+
 programa
 		:sentencias																{printf("COMPILACION OK\n");}
 		;								
@@ -50,9 +53,9 @@ sentencias
 			|sent																{printf("SENTENCIA INDIVIDUAL\n");}
 			;								
 sent								
-	:asignacion																	{printf("ASIG\n");}
-	|decision																	{printf("DESI\n");}
-	|declaracion																{printf("DECLA\n");}
+	:asignacion																	{printf("ASIGNACION\n");}
+	|decision																	{printf("DECISION\n");}
+	|declaracion																{printf("DECLARACION\n");}
 	|iteracion																	{printf("ITERA\n");}
 	|promedio																	{printf("AVG\n");}
 	;
@@ -70,24 +73,24 @@ decision
 		;
 		
 declaracion
-			:DEFVAR declaraciones ENDDEF										{printf("BLOQUE DECLARACION\n");}
+			:DEFVAR declaraciones ENDDEF										{saveIdType();printf("BLOQUE DECLARACION\n");}
 			;	
 declaraciones
 				:declaraciones formato_declaracion
 				|formato_declaracion
 				;
 formato_declaracion
-					:ID DP tipo_dato											{validarLongitudId(yylval.s);printf("DECLARACION SIMPLE\n");}	
-					|ID COMA formato_declaracion								{validarLongitudId(yylval.s);printf("DECLARACION MULTIPLE\n");}
+					:ID DP tipo_dato											{validarLongitudId(yylval.s);saveId(yylval.s);crearTerceto(yylval.s,"-1","-1");printf("DECLARACION SIMPLE\n");}	
+					|ID COMA formato_declaracion								{validarLongitudId($1);saveId($1);printf("DECLARACION MULTIPLE\n");}
 					;
 tipo_dato
-		:INT																	{printf("INT\n");}
-		|FLOAT																	{printf("FLOAT\n");}
-		|STRING																	{printf("STRING\n");}
+		:INT																	{saveType("int");printf("INT\n");}
+		|FLOAT																	{saveType("float");printf("FLOAT\n");}
+		|STRING																	{saveType("string");printf("STRING\n");}
 		;			
 		
-iteracion							
-			:WHILE P_A condiciones P_C LL_A sentencias LL_C 					{printf("WHILE\n");}
+iteracion
+            :WHILE P_A condiciones P_C LL_A sentencias LL_C                      {printf("WHILE\n");}
 			;						
 condiciones									
 			:condiciones operador condicion										{printf("Condiciones Multiples\n");}
@@ -151,9 +154,4 @@ int main(int argc,char *argv[])
   }
   fclose(yyin);
   return 0;
-}
-
-void yyerror(char *msg){
-    fprintf(stderr, "%s\n", msg);
-    exit(1);
 }
